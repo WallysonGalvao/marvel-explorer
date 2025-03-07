@@ -1,74 +1,88 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import {
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import response from "../../response.json";
+import CharacterCard from "@/components/CharacterCard";
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { FlashList } from "@shopify/flash-list";
+import { Character } from "@/types/character";
 
 export default function HomeScreen() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // const { data, isLoading, refetch } = useQuery({
+  //   queryKey: ["characters", searchQuery],
+  //   queryFn: () =>
+  //     getCharacters({
+  //       nameStartsWith: searchQuery || undefined,
+  //       limit: 20,
+  //       offset: 0,
+  //     }),
+  // });
+
+  const renderItem = ({ item }: { item: Character }) => (
+    <CharacterCard character={item} />
+  );
+
+  const renderEmpty = () => {
+    return (
+      <View className="flex-1 justify-center items-center p-10">
+        <Text className="text-lg text-gray-500 text-center">
+          No characters found. Try a different search.
+        </Text>
+      </View>
+    );
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <View className="px-4 pt-4 pb-2">
+        <View className="space-y-2 text-center">
+          <Text className="text-3xl md:text-5xl font-bold tracking-tight text-center">
+            Discover Marvel Characters
+          </Text>
+          <Text className="text-lg text-muted-foreground max-w-2xl mx-auto text-center">
+            Explore the vast universe of Marvel superheroes and villains with
+            our elegantly designed browser
+          </Text>
+        </View>
+
+        <View className="flex-row items-center my-4 bg-white rounded-full px-4 p-2 border border-gray-200">
+          <Ionicons name="search" size={20} color="#777" />
+          <TextInput
+            className="flex-1 p-2 pl-2 text-base"
+            placeholder="Search characters..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <Ionicons name="close-circle" size={20} color="#777" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
+      <FlashList
+        data={response.data.results}
+        renderItem={renderItem}
+        estimatedItemSize={200}
+        showsVerticalScrollIndicator={false}
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={onRefresh}
+        //     colors={["#ED1D24"]}
+        //   />
+        // }
+        ListEmptyComponent={renderEmpty}
+      />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
