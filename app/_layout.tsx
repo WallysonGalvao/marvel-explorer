@@ -39,7 +39,8 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={DefaultTheme}>
         <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen
             name="character-details/[id]"
             options={{ headerBackTitle: "Back" }}

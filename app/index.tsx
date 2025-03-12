@@ -1,17 +1,12 @@
-import {
-  SafeAreaView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
-import response from "../../response.json";
+import response from "../response.json";
 import CharacterCard from "@/components/CharacterCard";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { Character } from "@/types/character";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,7 +36,10 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 container self-center">
+    <SafeAreaView
+      className="flex-1 bg-gray-50 container self-center"
+      edges={["top"]}
+    >
       <View className="px-4 pt-4 pb-2">
         <View className="space-y-2 text-center">
           <Text className="text-3xl md:text-5xl font-bold tracking-tight text-center">
@@ -74,7 +72,7 @@ export default function HomeScreen() {
         renderItem={renderItem}
         estimatedItemSize={200}
         showsVerticalScrollIndicator={false}
-        numColumns={2}
+        numColumns={1}
         // refreshControl={
         //   <RefreshControl
         //     refreshing={refreshing}
